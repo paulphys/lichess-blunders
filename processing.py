@@ -116,7 +116,38 @@ def preprocess_PGN(inp, blunder_cutoff, min_elo, max_elo, min_time,max_time):
         print("\nParameters used:", file=outfile)
         print("\n Blunder cutoff: ", blunder_cutoff,"\nMin Elo: ", min_elo, "\nMax Elo: ",max_elo, "\nMin time:", min_time, "\nMax time:", max_time, file=outfile)
     return normalization, out
-                 
+
+def plot_histogram(raw, norm_data, max_time):
+    xdata, ydata = [],[]
+    for key in raw:
+        normed = raw[key]/norm_data[key]
+        xdata.append(key)
+        ydata.append(normed)
+        
+    plt.scatter(xdata,ydata, marker="|", s=1)
+    plt.xlim(0,max_time)
+    plt.ylim(0,0.45)
+    plt.xlabel("Time remaining (s)")
+    plt.ylabel("Probability of blunder")
+    plt.title("Blunder % chance with remaining time")
+    return xdata, ydata
+
+def plot_existing_data(identifier=None, max_time=300):
+    if not identifier:
+        identifier = input("Timestamp & params: ")
+    rawfile = "data/"+identifier+"_raw.txt"
+    normfile = "data/"+identifier+"_norm.txt"
+    print("Extracting raw data...")
+    raw = get_raw(rawfile)
+    print("Extracting normalization dict...")
+    with open(normfile, 'r') as infile: 
+        content = infile.read(); 
+        norm = eval(content);
+    print("Plotting...")
+    xdata, ydata = plot_histogram(raw,norm,max_time)
+    plt.title(identifier)
+    print("Done!")
+    return     
     
 def get_raw(blunderfile="blunders.txt"):
     raw = {}
@@ -129,7 +160,7 @@ def get_raw(blunderfile="blunders.txt"):
                 raw[int(key)] = 1
         return raw
 
-def driver(month, min_elo=0, max_elo=5000,min_time=300, max_time=300, savefig = False):
+def driver(month, min_elo=0, max_elo=5000,min_time=300, max_time=300, savefig = True):
     path= "dataset/" + month
     blunder_cutoff = -2
     norm, outfile = preprocess_PGN(path,blunder_cutoff, min_elo, max_elo, min_time, max_time)
@@ -140,15 +171,21 @@ def driver(month, min_elo=0, max_elo=5000,min_time=300, max_time=300, savefig = 
     print("Total blunders: ",total)
     print("Extracting data...")
     raw = get_raw(outfile)
+    xdata, ydata = plot_histogram(raw,norm, max_time)
+    if savefig:
+        print("Saving figure...")
+        plt.title(str(int(max_time/60))+"min games, ELO: "+str(min_elo)+"-"+str(max_elo))
+        plt.savefig(outfile[:-7]+"graph.png", dpi=300)
+        plt.clf()
     print("Done!\n")
 
 
 if __name__ == "__main__":
     start_time = time.perf_counter()
 
-    month = "lichess_db_standard_rated_2020-10.pgn"
+    month = "lichess_db_standard_rated_2022-10.pgn"
     try:
-        p1 = multiprocessing.Process(target=driver, args=(month, 0000, 1000, 180, 180,))
+        p1 = multiprocessing.Process(target=driver, args=(month, 0000, 1000, 180, 180))
         p2 = multiprocessing.Process(target=driver, args=(month, 1000, 2000, 180, 180))
         p3 = multiprocessing.Process(target=driver, args=(month, 2000, 4000, 180, 180))
 
@@ -156,9 +193,9 @@ if __name__ == "__main__":
         p5 = multiprocessing.Process(target=driver, args=(month, 1000,2000, 300, 300))
         p6 = multiprocessing.Process(target=driver, args=(month, 2000,4000, 300, 300))
 
-        p7 = multiprocessing.Process(target=driver, args=(month, 0000,1000, 600, 600))
-        p8 = multiprocessing.Process(target=driver, args=(month, 1000, 2000, 600,600))
-        p9 = multiprocessing.Process(target=driver, args=(month, 2000, 4000, 600,600))
+        p7 = multiprocessing.Process(target=driver, args=(month, 0000, 1000, 600, 600))
+        p8 = multiprocessing.Process(target=driver, args=(month, 1000, 2000, 600, 600))
+        p9 = multiprocessing.Process(target=driver, args=(month, 2000, 4000, 600, 600))
 
         p1.start()
         p2.start()
@@ -171,16 +208,7 @@ if __name__ == "__main__":
         p9.start()
 
         finish_time = time.perf_counter()
-        #thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000))
-    #  thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000))
 
-                #thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=0000, max_elo=1000))
-            #  thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=1000, max_elo=2000))
-            # thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=2000, max_elo=4000))
-    #
-            #   thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000))
-            #   thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000))
-            #    thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000))
 
     except:
         print("stuff broke")
