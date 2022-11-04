@@ -2,7 +2,7 @@ import os
 import time
 import matplotlib.pyplot as plt
 import subprocess
-import thread
+from threading import Thread
 
 def time_to_int(timestring):
     timeint = 0 
@@ -142,30 +142,32 @@ def driver(month, min_elo=0, max_elo=5000,min_time=300, max_time=300, savefig = 
     raw = get_raw(outfile)
     print("Done!\n")
 
-try: 
-    month = "lichess_db_standard_rated_2022-10.pgn"
-        try:
-            thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=0000, max_elo=1000))
-            thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000))
-            thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000))
 
-            thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=0000, max_elo=1000))
-            thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=1000, max_elo=2000))
-            thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=2000, max_elo=4000))
+if __name__ == "__main__":
 
-            thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000))
-            thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000))
-            thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000))
-            except:
-                print("stuff broke")
-        bashCommand = "rm " + "dataset/" + download_list[x].split("standard/",1)[1]
-        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-        output, error = process.communicate()       
-        if error:
-            print(error)
-            break
+    month = "lichess_db_standard_rated_2017-10.pgn"
+    t0 = time.time()
+    try:
+        t1 = Thread(target=driver, args=(month, 180, 180, 0000,1000))
+        t1.start()
+        #thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000))
+    #  thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000))
 
+                #thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=0000, max_elo=1000))
+            #  thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=1000, max_elo=2000))
+            # thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=2000, max_elo=4000))
+    #
+            #   thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000))
+            #   thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000))
+            #    thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000))
+    except:
+        print("stuff broke")
+        #bashCommand = "rm " + "dataset/" + download_list[x].split("standard/",1)[1]
+        #process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        #output, error = process.communicate()       
+        #if error:
+            #    print(error)
+            #   break
     print("Final runtime: ", round( (time.time()-t0 )/ 60,3),"min")
 
-except:
-    print("stuff broke")
+    t1.join()
