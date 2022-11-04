@@ -2,7 +2,7 @@ import os
 import time
 import matplotlib.pyplot as plt
 import subprocess
-from threading import Thread
+import multiprocessing
 
 def time_to_int(timestring):
     timeint = 0 
@@ -144,12 +144,18 @@ def driver(month, min_elo=0, max_elo=5000,min_time=300, max_time=300, savefig = 
 
 
 if __name__ == "__main__":
+    start_time = time.perf_counter()
 
-    month = "lichess_db_standard_rated_2017-10.pgn"
-    t0 = time.time()
+    month = "lichess_db_standard_rated_2020-10.pgn"
     try:
-        t1 = Thread(target=driver, args=(month, 180, 180, 0000,1000))
-        t1.start()
+        p1 = multiprocessing.Process(target=driver, args=(month, 180, 180, 0000,1000))
+        p2 = multiprocessing.Process(target=driver, args=(month, 180, 180, 1000,2000))
+        p3 = multiprocessing.Process(target=driver, args=(month, 180, 180, 2000,4000))
+        p1.start()
+        p2.start()
+        p3.start()
+
+        finish_time = time.perf_counter()
         #thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000))
     #  thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000))
 
@@ -160,6 +166,7 @@ if __name__ == "__main__":
             #   thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000))
             #   thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000))
             #    thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000))
+
     except:
         print("stuff broke")
         #bashCommand = "rm " + "dataset/" + download_list[x].split("standard/",1)[1]
@@ -168,6 +175,3 @@ if __name__ == "__main__":
         #if error:
             #    print(error)
             #   break
-    print("Final runtime: ", round( (time.time()-t0 )/ 60,3),"min")
-
-    t1.join()
