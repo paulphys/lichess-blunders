@@ -1,6 +1,8 @@
 import os
 import time
 import matplotlib.pyplot as plt
+import subprocess
+
 
 def time_to_int(timestring):
     #takes in timestamp of format "00:00:00" etc and converts to seconds int
@@ -147,21 +149,39 @@ def driver(month, min_elo=0, max_elo=5000,min_time=300, max_time=300, savefig = 
     print("Done!\n")
 
 
-t0 = time.time()
-for month in os.listdir("dataset"):
-    print("3mins:")
-    driver(month, min_time=180, max_time=180, min_elo=0000, max_elo=1000)
-    driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000)
-    driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000)
-    
-    print("5mins:")
-    driver(month, min_time=300, max_time=300, min_elo=0000, max_elo=1000)
-    driver(month, min_time=300, max_time=300, min_elo=1000, max_elo=2000)
-    driver(month, min_time=300, max_time=300, min_elo=2000, max_elo=4000)
-    
-    print("10mins:")
-    driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000)
-    driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000)
-    driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000)
+download_list = open("download.list").readlines()
+#print(download_list)
 
-print("Final runtime: ", round( (time.time()-t0 )/ 60,3),"min")
+for x in range(len(download_list)):
+    #print(download_list[x].split("standard/",1)[1])
+    bashCommand = "wget --continue -P dataset " + download_list[x]
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()       
+    if error:
+        break
+    
+    bashCommand = "pbzip2 -d " + "dataset/" + download_list[x].split("standard/",1)[1]
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()       
+    if error:
+        break
+    
+
+    t0 = time.time()
+    for month in os.listdir("dataset"):
+        print("3mins:")
+        driver(month, min_time=180, max_time=180, min_elo=0000, max_elo=1000)
+        driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000)
+        driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000)
+        
+        print("5mins:")
+        driver(month, min_time=300, max_time=300, min_elo=0000, max_elo=1000)
+        driver(month, min_time=300, max_time=300, min_elo=1000, max_elo=2000)
+        driver(month, min_time=300, max_time=300, min_elo=2000, max_elo=4000)
+        
+        print("10mins:")
+        driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000)
+        driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000)
+        driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000)
+
+    print("Final runtime: ", round( (time.time()-t0 )/ 60,3),"min")
