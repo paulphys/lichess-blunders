@@ -21,10 +21,9 @@ def strip_game(line, time_cutoff_min,time_cutoff_max):
     """  
     if time_cutoff_max == None:
         time_cutoff_max = float("Inf")
-    game = line.split("}")[:-1] #gets
+    game = line.split("}")[:-1] 
     stripped = []
     if game and ("%eval" in game[0]) and ("%clk" in game[0]):
-        #valid game
         for line in game:
             res = []
             curr = ""
@@ -40,7 +39,6 @@ def strip_game(line, time_cutoff_min,time_cutoff_max):
                     curr += char
             if len(res) == 2:
                 stripped.append(res)
-        #final check in case of checkmate (no eval is given)
     if stripped:
         if (time_to_int(stripped[0][1]) >= time_cutoff_min) and (time_to_int(stripped[0][1]) <= time_cutoff_max):
             return stripped
@@ -49,8 +47,6 @@ def strip_game(line, time_cutoff_min,time_cutoff_max):
             
 
 def extract_blunders(stripped,normalization, cutoff = -2, extremis = 100):
-    #cutoff = change in eval to count as a blunder
-    #extremis: point at which blunders are no longer recognised
     curr_eval = 0.0
     white = True
     blunder_times = []
@@ -102,7 +98,6 @@ def preprocess_PGN(inp, blunder_cutoff, min_elo, max_elo, min_time,max_time):
                 if line[:9] == "[WhiteElo":
                     curr_elo = int(line.split()[1][1:-2])
                 if (curr_elo < max_elo) and (curr_elo >= min_elo) and (line[:3] == "1. "):
-                    #reset for new game!
                     stripped = strip_game(line,min_time,max_time)
                     if stripped:
                         validcount +=1
@@ -157,12 +152,14 @@ try:
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()       
         if error:
+            print(error)
             break
         
         bashCommand = "pbzip2 -d " + "dataset/" + month
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()       
         if error:
+            print(error)
             break
         
         try:
@@ -183,6 +180,7 @@ try:
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()       
         if error:
+            print(error)
             break
 
     print("Final runtime: ", round( (time.time()-t0 )/ 60,3),"min")
