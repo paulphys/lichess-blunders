@@ -150,18 +150,18 @@ def driver(month, min_elo=0, max_elo=5000,min_time=300, max_time=300, savefig = 
 t0 = time.time()
 for month in os.listdir("dataset"):
     print("3mins:")
-    driver(month, min_time=180, max_time=180, min_elo=0000, max_elo=1000, savefig = False)
-    driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000, savefig = False)
-    driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000, savefig = False)
+    driver(month, min_time=180, max_time=180, min_elo=0000, max_elo=1000)
+    driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000)
+    driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000)
     
     print("5mins:")
-    driver(month, min_time=300, max_time=300, min_elo=0000, max_elo=1000, savefig = False)
-    driver(month, min_time=300, max_time=300, min_elo=1000, max_elo=2000, savefig = False)
-    driver(month, min_time=300, max_time=300, min_elo=2000, max_elo=4000, savefig = False)
+    driver(month, min_time=300, max_time=300, min_elo=0000, max_elo=1000)
+    driver(month, min_time=300, max_time=300, min_elo=1000, max_elo=2000)
+    driver(month, min_time=300, max_time=300, min_elo=2000, max_elo=4000)
     
     print("10mins:")
-    driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000, savefig = False)
-    driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000, savefig = False)
-    driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000, savefig = False)
+    driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000)
+    driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000)
+    driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000)
 
 print("Final runtime: ", round( (time.time()-t0 )/ 60,3),"min")
