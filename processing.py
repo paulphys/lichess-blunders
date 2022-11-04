@@ -148,12 +148,27 @@ if __name__ == "__main__":
 
     month = "lichess_db_standard_rated_2020-10.pgn"
     try:
-        p1 = multiprocessing.Process(target=driver, args=(month, 180, 180, 0000,1000))
-        p2 = multiprocessing.Process(target=driver, args=(month, 180, 180, 1000,2000))
-        p3 = multiprocessing.Process(target=driver, args=(month, 180, 180, 2000,4000))
+        p1 = multiprocessing.Process(target=driver, args=(month, 0000, 1000, 180, 180,))
+        p2 = multiprocessing.Process(target=driver, args=(month, 1000, 2000, 180, 180))
+        p3 = multiprocessing.Process(target=driver, args=(month, 2000, 4000, 180, 180))
+
+        p4 = multiprocessing.Process(target=driver, args=(month, 0000,1000, 300, 300))
+        p5 = multiprocessing.Process(target=driver, args=(month, 1000,2000, 300, 300))
+        p6 = multiprocessing.Process(target=driver, args=(month, 2000,4000, 300, 300))
+
+        p7 = multiprocessing.Process(target=driver, args=(month, 0000,1000, 600, 600))
+        p8 = multiprocessing.Process(target=driver, args=(month, 1000, 2000, 600,600))
+        p9 = multiprocessing.Process(target=driver, args=(month, 2000, 4000, 600,600))
+
         p1.start()
         p2.start()
         p3.start()
+        p4.start()
+        p5.start()
+        p6.start()
+        p7.start()
+        p8.start()
+        p9.start()
 
         finish_time = time.perf_counter()
         #thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000))
