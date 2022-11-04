@@ -152,31 +152,31 @@ try:
     t0 = time.time()
 
     for x in range(len(download_list)):
+        month =  download_list[x].split("standard/",1)[1]
         bashCommand = "wget --continue -P dataset " + download_list[x]
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()       
         if error:
             break
         
-        bashCommand = "pbzip2 -d " + "dataset/" + download_list[x].split("standard/",1)[1]
+        bashCommand = "pbzip2 -d " + "dataset/" + month
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()       
         if error:
             break
         
-        for month in os.listdir("dataset"):
-            try:
-                thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=0000, max_elo=1000))
-                thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000))
-                thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000))
+        try:
+            thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=0000, max_elo=1000))
+            thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=1000, max_elo=2000))
+            thread.start_new_thread(driver(month, min_time=180, max_time=180, min_elo=2000, max_elo=4000))
 
-                thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=0000, max_elo=1000))
-                thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=1000, max_elo=2000))
-                thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=2000, max_elo=4000))
+            thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=0000, max_elo=1000))
+            thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=1000, max_elo=2000))
+            thread.start_new_thread(driver(month, min_time=300, max_time=300, min_elo=2000, max_elo=4000))
 
-                thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000))
-                thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000))
-                thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000))
+            thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=0000, max_elo=1000))
+            thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=1000, max_elo=2000))
+            thread.start_new_thread(driver(month, min_time=600, max_time=600, min_elo=2000, max_elo=4000))
             except:
                 print("stuff broke")
         bashCommand = "rm " + "dataset/" + download_list[x].split("standard/",1)[1]
