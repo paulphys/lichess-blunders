@@ -200,7 +200,7 @@ if __name__ == "__main__":
         if error:
             print(error)
             break
-
+        month = month[:-4]
         try:
             p1 = multiprocessing.Process(target=driver, args=(month, 0000, 1000, 180, 180))
             p2 = multiprocessing.Process(target=driver, args=(month, 1000, 2000, 180, 180))
@@ -229,7 +229,7 @@ if __name__ == "__main__":
         except:
             print("stuff broke")
 
-        bashCommand = "rm " + "dataset/" + download_list[x].split("standard/",1)[1]
+        bashCommand = "rm " + "dataset/" + month
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()       
         if error:
