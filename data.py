@@ -162,7 +162,7 @@ if __name__ == "__main__":
             print(error)
             break
         print("Decompression done")
-        fullpath = fullpath[:-4]
+        fullpath = fullpath[:-5]
         print("Extracting data... " + month)
 
         try:
