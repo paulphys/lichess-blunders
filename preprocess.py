@@ -162,6 +162,7 @@ def get_raw(blunderfile="blunders.txt"):
 
 def driver(month, min_elo=0, max_elo=5000,min_time=300, max_time=300, savefig = True):
     path= "dataset/" + month
+    path = path.rstrip()
     blunder_cutoff = -2
     norm, outfile = preprocess_PGN(path,blunder_cutoff, min_elo, max_elo, min_time, max_time)
     print("Data processed.")
@@ -185,7 +186,7 @@ if __name__ == "__main__":
     download_list = open("download.list").readlines()
 
     for x in range(len(download_list)):
-        month =  download_list[x].split("standard/",1)[1]
+        month =  download_list[x].split("standard/",1)[1].rstrip()
         bashCommand = "wget --continue -P dataset " + download_list[x]
         process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
         output, error = process.communicate()       
